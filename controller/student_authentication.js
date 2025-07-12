@@ -95,7 +95,6 @@ export const login = async (req, res) => {
     const codeExpireTime = Date.now() + 24 * 60 * 60 * 1000;
 
     //jwt generate
-
     const newToken = await jwt.sign(
       { id: student.id },
       process.env.JWT_SECRET_KEY,
@@ -113,6 +112,19 @@ export const login = async (req, res) => {
     });
   } catch (err) {
     console.error("Login error:", err);
+    res.status(500).json({ err: "Internal server error" });
+  }
+};
+
+//logout
+export const logout = async (res, req) => {
+  try {
+    res.json({
+      message: "Logout successful",
+      success: true,
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
     res.status(500).json({ err: "Internal server error" });
   }
 };
