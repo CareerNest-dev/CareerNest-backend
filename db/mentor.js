@@ -2,15 +2,15 @@ import dotenv from "dotenv";
 import dynamodb from "../config/aws/aws_config.js";
 dotenv.config();
 
-export const createStudent = async (userData) => {
+export const createMentor = async (userData) => {
   const params = {
-    TableName: "Students",
+    TableName: "Mentors",
     Item: {
       id: userData.userId,
       username: userData.username,
       email: userData.email,
       password: userData.password,
-      role:userData.role,
+      role: userData.role,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
@@ -19,14 +19,14 @@ export const createStudent = async (userData) => {
     await dynamodb.put(params).promise();
     return { succss: true };
   } catch (err) {
-    console.log("Error creating student:", err);
+    console.error("Error creating student:", err);
     return { success: false, error: err.message };
   }
 };
 //get username
-export const getStudentByUsername = async (username) => {
+export const getMentorByUsername = async (username) => {
   const params = {
-    TableName: "Students",
+    TableName: "Mentors",
     IndexName: "username-index", // You'll need to create this GSI
     KeyConditionExpression: "username = :username",
     ExpressionAttributeValues: {
@@ -43,9 +43,9 @@ export const getStudentByUsername = async (username) => {
 };
 //get email
 
-export const getStudentByEmail = async (email) => {
+export const getMentorByEmail = async (email) => {
   const params = {
-    TableName: "Students",
+    TableName: "Mentors",
     IndexName: "email-index", // You'll need to create this GSI
     KeyConditionExpression: "email = :email",
     ExpressionAttributeValues: {
@@ -62,9 +62,9 @@ export const getStudentByEmail = async (email) => {
   }
 };
 //get id
-export const getStudentById = async (id) => {
+export const getMentorById = async (id) => {
   const params = {
-    TableName: "Students",
+    TableName: "Mentors",
     Key: { id },
   };
 
