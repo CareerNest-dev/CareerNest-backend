@@ -13,6 +13,7 @@ export const createMentor = async (userData) => {
       role: userData.role,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+       isActive: true, // Default to active
     },
   };
   try {

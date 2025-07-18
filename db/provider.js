@@ -13,6 +13,7 @@ export const createProvider = async (userData) => {
       role: userData.role,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      isActive: true, // Default to active
     },
   };
   try {
@@ -24,13 +25,16 @@ export const createProvider = async (userData) => {
   }
 };
 //get username
-export const getProviderByUsername = async (username) => {
+export const getProviderByUsername = async (username, requesterId = null) => {
   const params = {
     TableName: "Providers",
     IndexName: "username-index", // You'll need to create this GSI
     KeyConditionExpression: "username = :username",
+    FilterExpression: "isActive = :isActive OR id = :requesterId",
     ExpressionAttributeValues: {
       ":username": username,
+      ":isActive": true,
+      ":requesterId": requesterId || username, // Allow the user to see their own disabled account
     },
   };
   try {
@@ -43,13 +47,16 @@ export const getProviderByUsername = async (username) => {
 };
 //get email
 
-export const getProviderByEmail = async (email) => {
+export const getProviderByEmail = async (email, requesterId = null) => {
   const params = {
     TableName: "Providers",
     IndexName: "email-index", // You'll need to create this GSI
     KeyConditionExpression: "email = :email",
+    FilterExpression: "isActive = :isActive OR id = :requesterId",
     ExpressionAttributeValues: {
       ":email": email,
+      ":isActive": true,
+      ":requesterId": requesterId || username, // Allow the user to see their own disabled account
     },
   };
 
