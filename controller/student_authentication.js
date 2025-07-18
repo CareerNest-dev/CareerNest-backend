@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     }
     let existingEmail;
     // Check if email already exists
-    if (role === "student") {
+    if (role === "student") {``
       existingEmail = await getStudentByEmail(email);
     } else if (role === "provider") {
       existingEmail = await getProviderByEmail(email);
@@ -66,9 +66,13 @@ export const register = async (req, res) => {
     }
 
     console.log(createResult);
-    const newToken = await jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-      expiresIn: codeExpireTime,
-    });
+    const newToken = await jwt.sign(
+      { id: userId, role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: codeExpireTime,
+      }
+    );
     if (!createResult.succss) {
       console.log("Registration error");
       return res
@@ -76,7 +80,7 @@ export const register = async (req, res) => {
         .json({ error: "Failed to create student account" });
     }
     res.status(201).json({
-      message: "Student registered successfully",
+      message: "user registered successfully",
       newToken,
       user: {
         userId,
@@ -94,7 +98,7 @@ export const register = async (req, res) => {
 //login user
 export const login = async (req, res) => {
   const { email, password, role } = req.body;
-  if (!username || !password || !role) {
+  if (!email || !password || !role) {
     return res.status(400).json({ succss: false, massage: "missing details" });
   }
   try {
@@ -121,8 +125,8 @@ export const login = async (req, res) => {
 
     //jwt generate
     const newToken = await jwt.sign(
-      { id: user.id },
-      process.env.JWT_SECRET_KEY,
+      { id: user.id, role },
+      process.env.JWT_SECRET,
       { expiresIn: codeExpireTime }
     );
 
