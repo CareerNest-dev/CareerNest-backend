@@ -295,3 +295,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Made with ❤️ for IT undergraduates worldwide**
 
 *Helping students build better careers, one internship at a time.*
+

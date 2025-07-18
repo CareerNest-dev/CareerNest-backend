@@ -8,6 +8,7 @@ import {
   getProviderByUsername,
 } from "../db/provider.js";
 import { createStudent, getStudentByEmail } from "../db/user.js";
+import resetCurrentPassword from "../helper/reset_password.js";
 dotenv.config();
 
 //register user
@@ -28,7 +29,7 @@ export const register = async (req, res) => {
     }
     let existingEmail;
     // Check if email already exists
-    if (role === "student") {``
+    if (role === "student") {
       existingEmail = await getStudentByEmail(email);
     } else if (role === "provider") {
       existingEmail = await getProviderByEmail(email);
@@ -145,7 +146,31 @@ export const login = async (req, res) => {
     res.status(500).json({ err: "Internal server error" });
   }
 };
+//reset current password
+export const resetPassword = async (req, res) => {
+  const { password } = req.body;
+  const { id, role } = req.user;
 
+  if (!password) {
+    res.status(400).json({ err: "empty password" });
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hasedPassword = await bcrypt.hash(password, salt);
+
+    const updateResult = await resetCurrentPassword(hasedPassword, role, id);
+    if (!updateResult.success) {
+      return res.status(500).json({ error: updateResult.error });
+    }
+
+    res.status(200).json({
+      message: "password reset successfully",
+    });
+  } catch (err) {
+    console.error("password reset error:", err);
+    res.status(500).json({ err: "Internal server error" });
+  }
+};
 //logout
 export const logout = async (res, req) => {
   try {
