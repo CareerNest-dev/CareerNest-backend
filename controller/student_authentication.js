@@ -1,31 +1,42 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { createMentor, getMentorByEmail } from "../db/mentor.js";
 import {
-  createStudent,
-  getStudentByEmail,
-  getStudentByUsername,
-} from "../db/user.js";
-
+  createProvider,
+  getProviderByEmail,
+  getProviderByUsername,
+} from "../db/provider.js";
+import { createStudent, getStudentByEmail } from "../db/user.js";
+import resetCurrentPassword from "../helper/reset_password.js";
 dotenv.config();
 
 //register user
 export const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !role) {
     return res.status(400).json({ succss: false, massage: "missing details" });
   }
 
   try {
-    //check if username already exist
-    const existUser = await getStudentByUsername(username);
-    if (existUser) {
-      return res.status(400).json({ error: "Username already exists" });
+    //check if username already exist for intern providers(organizatiion)
+    if (role == "provider") {
+      const existUser = await getProviderByUsername(username);
+      if (existUser) {
+        return res.status(400).json({ error: "Username already exists" });
+      }
+    }
+    let existingEmail;
+    // Check if email already exists
+    if (role === "student") {
+      existingEmail = await getStudentByEmail(email);
+    } else if (role === "provider") {
+      existingEmail = await getProviderByEmail(email);
+    } else {
+      existingEmail = await getMentorByEmail(email);
     }
 
-    // Check if email already exists
-    const existingEmail = await getStudentByEmail(email);
     if (existingEmail) {
       return res.status(400).json({ error: "Email already registered" });
     }
@@ -35,37 +46,48 @@ export const register = async (req, res) => {
 
     const codeExpireTime = Date.now() + 24 * 60 * 60 * 1000;
     // Generate unique ID
-    const studentId = `student_${Date.now()}_${Math.random()
+    const userId = `user_${Date.now()}_${Math.random()
       .toString(36)
       .substr(2, 9)}`;
     // Create student record
-    const studentData = {
-      id: studentId,
+    const userData = {
+      userId,
       username,
       email,
       password: hasedPassword,
+      role,
     };
+    let createResult;
+    if (role === "student") {
+      createResult = await createStudent(userData);
+    } else if (role === "provider") {
+      createResult = await createProvider(userData);
+    } else {
+      createResult = await createMentor(userData);
+    }
 
-    const createResult = await createStudent(studentData);
     console.log(createResult);
     const newToken = await jwt.sign(
-      { id: studentId },
-      process.env.JWT_SECRET_KEY,
-      { expiresIn: codeExpireTime }
+      { id: userId, role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: codeExpireTime,
+      }
     );
-    if (!createResult.success) {
+    if (!createResult.succss) {
       console.log("Registration error");
       return res
         .status(500)
         .json({ error: "Failed to create student account" });
     }
     res.status(201).json({
-      message: "Student registered successfully",
+      message: "user registered successfully",
       newToken,
-      student: {
-        id: studentId,
+      user: {
+        userId,
         username,
         email,
+        role,
       },
     });
   } catch (err) {
@@ -76,38 +98,47 @@ export const register = async (req, res) => {
 
 //login user
 export const login = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
+  const { email, password, role } = req.body;
+  if (!email || !password || !role) {
     return res.status(400).json({ succss: false, massage: "missing details" });
   }
   try {
-    // Find student by username
-    const student = await getStudentByUsername(username);
-    if (!student) {
-      return res.status(401).json({ error: "Invalid username or password" });
+    var user;
+    if (role == "student") {
+      user = await getStudentByEmail(email);
+    } else if (role == "provider") {
+      user = await getProviderByEmail(email);
+    } else {
+      user = await getMentorByEmail(email);
     }
-    console.log(student);
+    // Find student by username
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid email" });
+    }
+    console.log(user);
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, student.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid username or password" });
+      return res.status(401).json({ error: "Invalid password" });
     }
     const codeExpireTime = Date.now() + 24 * 60 * 60 * 1000;
 
     //jwt generate
     const newToken = await jwt.sign(
-      { id: student.id },
-      process.env.JWT_SECRET_KEY,
+      { id: user.id, role },
+      process.env.JWT_SECRET,
       { expiresIn: codeExpireTime }
     );
 
     res.json({
       message: "Login successful",
       newToken,
-      student: {
-        id: student.id,
-        username: student.username,
-        email: student.email,
+      User: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {
@@ -115,7 +146,31 @@ export const login = async (req, res) => {
     res.status(500).json({ err: "Internal server error" });
   }
 };
+//reset current password
+export const resetPassword = async (req, res) => {
+  const { password } = req.body;
+  const { id, role } = req.user;
 
+  if (!password) {
+    res.status(400).json({ err: "empty password" });
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hasedPassword = await bcrypt.hash(password, salt);
+
+    const updateResult = await resetCurrentPassword(hasedPassword, role, id);
+    if (!updateResult.success) {
+      return res.status(500).json({ error: updateResult.error });
+    }
+
+    res.status(200).json({
+      message: "password reset successfully",
+    });
+  } catch (err) {
+    console.error("password reset error:", err);
+    res.status(500).json({ err: "Internal server error" });
+  }
+};
 //logout
 export const logout = async (res, req) => {
   try {
