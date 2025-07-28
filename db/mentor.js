@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import dynamodb from "../config/aws/aws_config.js";
+import dynamodb from "../config/aws/dynamo_db_config.js";
 dotenv.config();
 
 export const createMentor = async (userData) => {
@@ -13,6 +13,7 @@ export const createMentor = async (userData) => {
       role: userData.role,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      isActive: true, // Default to active
     },
   };
   try {

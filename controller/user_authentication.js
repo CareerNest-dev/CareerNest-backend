@@ -1,3 +1,4 @@
+//#region 
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -9,7 +10,9 @@ import {
 } from "../db/provider.js";
 import { createStudent, getStudentByEmail } from "../db/user.js";
 import resetCurrentPassword from "../helper/reset_password.js";
+import { toggleAccountStatus } from "../helper/toggle_status.js";
 dotenv.config();
+//#endregion
 
 //register user
 export const register = async (req, res) => {
@@ -168,6 +171,30 @@ export const resetPassword = async (req, res) => {
     });
   } catch (err) {
     console.error("password reset error:", err);
+    res.status(500).json({ err: "Internal server error" });
+  }
+};
+//enable & disable user account
+export const toggleStatus = async (req, res) => {
+  const { isActive } = req.body;
+  const { id, role } = req.user;
+
+  // Validate input
+  if (typeof isActive !== "boolean") {
+    return res.status(400).json({ error: "isActive must be a boolean" });
+  }
+
+  try {
+    const result = await toggleAccountStatus(id, role, isActive);
+    if (!result.success) {
+      return res.status(500).json({ error: result.error });
+    }
+    res.status(200).json({
+      message: `Account ${isActive ? "enabled" : "disabled"} successfully`,
+      updatedAttributes: result.updatedAttributes,
+    });
+  } catch (err) {
+    console.log("Error in account status endpoint:", err);
     res.status(500).json({ err: "Internal server error" });
   }
 };

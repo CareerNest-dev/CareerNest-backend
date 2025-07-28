@@ -1,0 +1,39 @@
+{
+  "family": "carrernest-nodejs-task-definition",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::212499161168:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::212499161168:role/carrernest-dynamodb-s3-role",
+  "containerDefinitions": [
+    {
+      "name": "carrernest-nodejs-app",
+      "image": "212499161168.dkr.ecr.ap-south-1.amazonaws.com/carrernest-nodejs-app",
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "AWS_REGION_DYNAMODB",
+          "value": "ap-south-1"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/your-nodejs-app",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
