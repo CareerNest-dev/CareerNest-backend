@@ -12,7 +12,7 @@ env:
   ECS_SERVICE: carrernest-nodejs-service
   ECS_CLUSTER: carrernest-nodejs-cluster
   ECS_TASK_DEFINITION: task-definition.json
-  CONTAINER_NAME: carrernest-nodejs
+  CONTAINER_NAME: carrernest-nodejs-app
 
 jobs:
   test:
