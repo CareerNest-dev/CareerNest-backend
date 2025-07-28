@@ -1,3 +1,4 @@
+//#region 
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -11,6 +12,7 @@ import { createStudent, getStudentByEmail } from "../db/user.js";
 import resetCurrentPassword from "../helper/reset_password.js";
 import { toggleAccountStatus } from "../helper/toggle_status.js";
 dotenv.config();
+//#endregion
 
 //register user
 export const register = async (req, res) => {

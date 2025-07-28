@@ -32,7 +32,7 @@ export const update = async (req, res) => {
       }
       const fileName = `profileimages/${id}_${Date.now()}.${fileExtension}`;
       const params = {
-        Bucket: process.env.S3_BUCKET_NAME,
+        Bucket: process.env.S3_BUCKET_NAME || 'studentprofileimages',
         Key: fileName,
         Body: file.buffer,
         ContentType: file.mimetype,

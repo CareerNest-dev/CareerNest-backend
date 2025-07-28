@@ -1,4 +1,4 @@
-import dynamodb from "../config/aws/aws_config.js";
+import dynamodb from "../config/aws/dynamo_db_config.js";
 
 export const toggleAccountStatus = async (id, role, isActive) => {
   // Validate role
