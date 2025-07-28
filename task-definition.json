@@ -5,7 +5,7 @@
   "cpu": "512",
   "memory": "1024",
   "executionRoleArn": "arn:aws:iam::212499161168:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::212499161168:role/carrernest-dynamodb-s3-role",
+  "taskRoleArn": "arn:aws:iam::212499161168:role/carrernest-dynamo-s3-role",
   "containerDefinitions": [
     {
       "name": "carrernest-nodejs-app",
