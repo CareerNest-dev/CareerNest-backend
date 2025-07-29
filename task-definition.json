@@ -24,6 +24,18 @@
         {
           "name": "AWS_REGION_DYNAMODB",
           "value": "ap-south-1"
+        },
+        {
+          "name": "PORT",
+          "value": "5000"
+        },
+        {
+          "name": "JWT_SECRET",
+          "value": "3f0aa2c08d241dc84d0c32c521d4fe94bb81ed7bc20bed35fed1d8599ed47f42"
+        },
+        {
+          "name": "S3_BUCKET_NAME",
+          "value": "studentprofileimages"
         }
       ],
       "healthCheck": {
