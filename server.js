@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/update", updateRouter);
 //start server
-app.listen(PORT, "0.0.0.0", () => {
+const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`server is running on port ${PORT}`);
 });
 
@@ -50,3 +50,10 @@ process.on("SIGINT", () => {
   console.log("SIGINT received, shutting down gracefully");
   process.exit(0);
 });
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  process.exit(1);
+});
+
+export default app;
