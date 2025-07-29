@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import dynamodb from "../config/aws/aws_config.js";
+import dynamodb from "../config/aws/dynamo_db_config.js";
 dotenv.config();
 // New function to update student profile
 const updateStudentProfile = async (id, role, profileData, profileurl) => {
