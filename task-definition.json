@@ -29,9 +29,10 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/your-nodejs-app",
+          "awslogs-group": "/ecs/carrernest-nodejs-app",
           "awslogs-region": "ap-south-1",
-          "awslogs-stream-prefix": "ecs"
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
         }
       }
     }
