@@ -1,9 +1,9 @@
+
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import authRouter from "./routes/authroutes.js";
 import updateRouter from "./routes/updateroute.js";
-import mentorRouter from "./routes/mentor_routes.js";
 
 dotenv.config();
 
@@ -33,7 +33,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/update", updateRouter);
-app.use("/api/mentor", mentorRouter);
 //start server
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`server is running on port ${PORT}`);
