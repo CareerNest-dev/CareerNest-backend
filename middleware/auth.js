@@ -9,13 +9,12 @@ const jwtAuth = (req, res, next) => {
       .json({ succss: false, massage: " authorization denied,Invalid user" });
   }
   try {
-    const decodeToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log("Decoded token:", decodeToken);
+    const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decodeToken);
     req.user = decodeToken;
     next();
   } catch (err) {
-    console.error("Token verification error:", err.message);
+    console.log("Token verification error:", err.message);
 
     // Check if the error is due to token expiration
     if (err.name === "jwt expired") {
