@@ -16,7 +16,7 @@ export const createStudent = async (studentData) => {
   };
   try {
     await dynamodb.put(params).promise();
-    return { succss: true };
+    return { success: true };
   } catch (err) {
     console.error("Error creating student:", error);
     return { success: false, error: error.message };

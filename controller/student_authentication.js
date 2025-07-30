@@ -46,8 +46,9 @@ export const register = async (req, res) => {
       password: hasedPassword,
     };
 
+
     const createResult = await createStudent(studentData);
-    console.log(createResult);
+    console.log(createResult.success);
     const newToken = await jwt.sign(
       { id: studentId },
       process.env.JWT_SECRET_KEY,
@@ -98,7 +99,7 @@ export const login = async (req, res) => {
     const newToken = await jwt.sign(
       { id: student.id },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: codeExpireTime }
+      { expiresIn: codeExpireTime },
     );
 
     res.json({
