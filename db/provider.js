@@ -56,7 +56,7 @@ export const getProviderByEmail = async (email, requesterId = null) => {
     ExpressionAttributeValues: {
       ":email": email,
       ":isActive": true,
-      ":requesterId": requesterId || username, // Allow the user to see their own disabled account
+      ":requesterId": requesterId || email, // Allow the user to see their own disabled account
     },
   };
 

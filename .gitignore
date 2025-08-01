@@ -40,3 +40,6 @@ coverage/
 
 # Optional: ignore dist if you use TypeScript
 dist/
+
+#files
+deploy.md
