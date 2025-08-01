@@ -1,7 +1,10 @@
-//#region 
+//#region
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import ACCOUNT_VERIFICATION_HTML_TEMPLETE from "../config/mail/account_verification_templete.js";
+import sendEmail from "../config/mail/node_mailer.js";
+import WELCOME_EMAIL_TEMPLETE from "../config/mail/welcome_email..js";
 import { createMentor, getMentorByEmail } from "../db/mentor.js";
 import {
   createProvider,
@@ -24,7 +27,7 @@ export const register = async (req, res) => {
 
   try {
     //check if username already exist for intern providers(organizatiion)
-    if (role == "provider") {
+    if (role === "provider") {
       const existUser = await getProviderByUsername(username);
       if (existUser) {
         return res.status(400).json({ error: "Username already exists" });
@@ -60,6 +63,7 @@ export const register = async (req, res) => {
       password: hasedPassword,
       role,
     };
+    const isValidated = role === "student";
     let createResult;
     if (role === "student") {
       createResult = await createStudent(userData);
@@ -70,29 +74,66 @@ export const register = async (req, res) => {
     }
 
     console.log(createResult);
-    const newToken = await jwt.sign(
-      { id: userId, role },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: codeExpireTime,
-      }
-    );
     if (!createResult.succss) {
       console.log("Registration error");
       return res
         .status(500)
         .json({ error: "Failed to create student account" });
     }
-    res.status(201).json({
-      message: "user registered successfully",
-      newToken,
-      user: {
-        userId,
-        username,
-        email,
-        role,
-      },
-    });
+    //is user initialy validate - students
+    if (isValidated) {
+      //send welcome massage
+      const mailReciver = {
+        from: process.env.APP_EMAIL,
+        to: userData.email,
+        subject: "Welcome to CareerNest",
+        html: WELCOME_EMAIL_TEMPLETE.replace("{{username}}", username),
+      };
+      //send email
+      await sendEmail.sendMail(mailReciver);
+      const newToken = await jwt.sign(
+        { id: userId, role },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: codeExpireTime,
+        }
+      );
+      res.status(201).json({
+        message: "user registered successfully",
+        newToken,
+        user: {
+          userId,
+          username,
+          email,
+          role,
+          isValidated: true,
+        },
+      });
+    } else {
+      const mailReciver = {
+        from: process.env.APP_EMAIL,
+        to: userData.email,
+        subject: "Welcome to CareerNest",
+        html: ACCOUNT_VERIFICATION_HTML_TEMPLETE.replace(
+          "{{username}}",
+          username
+        ),
+      };
+      //send email
+      await sendEmail.sendMail(mailReciver);
+
+      res.status(200).json({
+        message:
+          "Registration submitted successfully. Your account is pending admin validation. You will receive an email once approved.",
+        user: {
+          userId,
+          username,
+          email,
+          role,
+          isValidated: false,
+        },
+      });
+    }
   } catch (err) {
     console.log("Registration error:", err);
     res.status(500).json({ err: "Internal server error" });
@@ -142,6 +183,8 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        isValidate: user.isValidate,
+        isValidate: user.isActive,
       },
     });
   } catch (err) {

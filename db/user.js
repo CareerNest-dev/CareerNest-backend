@@ -14,6 +14,7 @@ export const createStudent = async (userData) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isActive: true, // Default to active
+      isValidate: true,
     },
   };
   try {

@@ -43,3 +43,4 @@ dist/
 
 #files
 deploy.md
+helpers.js

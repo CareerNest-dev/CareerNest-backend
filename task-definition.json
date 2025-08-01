@@ -36,6 +36,26 @@
         {
           "name": "S3_BUCKET_NAME",
           "value": "studentprofileimages"
+        },
+        {
+          "name": "SMTP_SERVER",
+          "value": "smtp-relay.brevo.com"
+        },
+        {
+          "name": "SMTP_PORT",
+          "value": "587"
+        },
+        {
+          "name": "SMTP_USER",
+          "value": "8a2396001@smtp-brevo.com"
+        },
+        {
+          "name": "SMTP_PASSWORD",
+          "value": "drv3mzCVTOQqH1bJ"
+        },
+        {
+          "name": "APP_EMAIL",
+          "value": "careernest.dev@gmail.com"
         }
       ],
       "healthCheck": {

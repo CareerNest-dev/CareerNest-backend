@@ -14,13 +14,14 @@ export const createMentor = async (userData) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isActive: true, // Default to active
+      isValidate:false
     },
   };
   try {
     await dynamodb.put(params).promise();
     return { succss: true };
   } catch (err) {
-    console.error("Error creating student:", err);
+    console.error("Error creating mentor:", err);
     return { success: false, error: err.message };
   }
 };
