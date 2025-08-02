@@ -7,12 +7,17 @@ dotenv.config();
 //smtp email tranport
 const sendEmail = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: process.env.SMTP_PORT,
+  port: process.env.SMTP_PORT || 587,
   secure: false,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
   },
+  connectionTimeout: 60000,
+  greetingTimeout: 30000,
+  socketTimeout: 60000,
+  pool: true,
+  maxConnections: 5,
 });
 
 // Email service functions

@@ -76,6 +76,17 @@
           "awslogs-stream-prefix": "ecs",
           "awslogs-create-group": "true"
         }
+      },
+      "networkConfiguration": {
+        "awsvpcConfiguration": {
+          "subnets": [
+            "subnet-086e923d6cd2b4845",
+            "subnet-0b3946dd3d589649e",
+            "subnet-07abdc1990bc1c507"
+          ],
+          "securityGroups": ["sg-089faac614c99bf97"],
+          "assignPublicIp": "ENABLED"
+        }
       }
     }
   ]
