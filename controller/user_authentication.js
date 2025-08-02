@@ -2,9 +2,10 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import ACCOUNT_VERIFICATION_HTML_TEMPLETE from "../config/mail/account_verification_templete.js";
-import sendEmail from "../config/mail/node_mailer.js";
-import WELCOME_EMAIL_TEMPLETE from "../config/mail/welcome_email..js";
+import {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} from "../config/mail/node_mailer.js";
 import { createMentor, getMentorByEmail } from "../db/mentor.js";
 import {
   createProvider,
@@ -83,14 +84,15 @@ export const register = async (req, res) => {
     //is user initialy validate - students
     if (isValidated) {
       //send welcome massage
-      const mailReciver = {
-        from: process.env.APP_EMAIL,
-        to: userData.email,
-        subject: "Welcome to CareerNest",
-        html: WELCOME_EMAIL_TEMPLETE.replace("{{username}}", username),
-      };
-      //send email
-      await sendEmail.sendMail(mailReciver);
+      // const mailReciver = {
+      //   from: process.env.APP_EMAIL,
+      //   to: userData.email,
+      //   subject: "Welcome to CareerNest",
+      //   html: WELCOME_EMAIL_TEMPLETE.replace("{{username}}", username),
+      // };
+      // //send email
+      // await sendEmail.sendMail(mailReciver);
+      await sendWelcomeEmail(email, username);
       const newToken = await jwt.sign(
         { id: userId, role },
         process.env.JWT_SECRET,
@@ -110,18 +112,18 @@ export const register = async (req, res) => {
         },
       });
     } else {
-      const mailReciver = {
-        from: process.env.APP_EMAIL,
-        to: userData.email,
-        subject: "Welcome to CareerNest",
-        html: ACCOUNT_VERIFICATION_HTML_TEMPLETE.replace(
-          "{{username}}",
-          username
-        ),
-      };
-      //send email
-      await sendEmail.sendMail(mailReciver);
-
+      // const mailReciver = {
+      //   from: process.env.APP_EMAIL,
+      //   to: userData.email,
+      //   subject: "Welcome to CareerNest",
+      //   html: ACCOUNT_VERIFICATION_HTML_TEMPLETE.replace(
+      //     "{{username}}",
+      //     username
+      //   ),
+      // };
+      // //send email
+      // await sendEmail.sendMail(mailReciver);
+      await sendVerificationEmail(email, username);
       res.status(200).json({
         message:
           "Registration submitted successfully. Your account is pending admin validation. You will receive an email once approved.",

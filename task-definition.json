@@ -47,15 +47,15 @@
         },
         {
           "name": "SMTP_USER",
-          "value": "8a2396001@smtp-brevo.com"
+          "value": "93c165001@smtp-brevo.com"
         },
         {
           "name": "SMTP_PASSWORD",
-          "value": "drv3mzCVTOQqH1bJ"
+          "value": "k6nPgr0axMDKIXO5"
         },
         {
           "name": "APP_EMAIL",
-          "value": "careernest.dev@gmail.com"
+          "value": "udarachamod03@gmail.com"
         }
       ],
       "healthCheck": {
