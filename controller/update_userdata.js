@@ -36,7 +36,7 @@ export const update = async (req, res) => {
         Key: fileName,
         Body: file.buffer,
         ContentType: file.mimetype,
-        ACL: "public-read", // Adjust based on access needs
+      //  ACL: "public-read", // Adjust based on access needs
       };
 
       await s3Client.send(new PutObjectCommand(params));
