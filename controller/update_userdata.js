@@ -36,11 +36,11 @@ export const update = async (req, res) => {
         Key: fileName,
         Body: file.buffer,
         ContentType: file.mimetype,
-        ACL: "public-read", // Adjust based on access needs
+      //  ACL: "public-read", // Adjust based on access needs
       };
 
       await s3Client.send(new PutObjectCommand(params));
-      profileurl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION_DYNAMODB}.amazonaws.com/${fileName}`;
+      profileurl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
       //https://studentprofileimages.s3.ap-south-1.amazonaws.com/profileimages/user_1752822494381_goovoomot_1752822768975.jpeg
     } catch (error) {
       console.log("Error uploading to S3:", error);
