@@ -22,7 +22,7 @@
           "value": "production"
         },
         {
-          "name": "AWS_REGION_DYNAMODB",
+          "name": "AWS_REGION",
           "value": "ap-south-1"
         },
         {

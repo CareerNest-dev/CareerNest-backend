@@ -84,14 +84,7 @@ export const register = async (req, res) => {
     //is user initialy validate - students
     if (isValidated) {
       //send welcome massage
-      // const mailReciver = {
-      //   from: process.env.APP_EMAIL,
-      //   to: userData.email,
-      //   subject: "Welcome to CareerNest",
-      //   html: WELCOME_EMAIL_TEMPLETE.replace("{{username}}", username),
-      // };
-      // //send email
-      // await sendEmail.sendMail(mailReciver);
+
       await sendWelcomeEmail(email, username);
       const newToken = await jwt.sign(
         { id: userId, role },
@@ -112,17 +105,6 @@ export const register = async (req, res) => {
         },
       });
     } else {
-      // const mailReciver = {
-      //   from: process.env.APP_EMAIL,
-      //   to: userData.email,
-      //   subject: "Welcome to CareerNest",
-      //   html: ACCOUNT_VERIFICATION_HTML_TEMPLETE.replace(
-      //     "{{username}}",
-      //     username
-      //   ),
-      // };
-      // //send email
-      // await sendEmail.sendMail(mailReciver);
       await sendVerificationEmail(email, username);
       res.status(200).json({
         message:
