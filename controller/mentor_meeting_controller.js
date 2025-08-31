@@ -5,7 +5,7 @@ import { create, getMeetingByStudent ,getMeetingByMentor} from "../db/mentor_mee
 
 dotenv.config();
 
-//register user
+//create meeting
 export const createMeeting = async (req, res) => {
     const { time_slot_id, mentor_id ,date} = req.body;
     const { id, role } = req.user;

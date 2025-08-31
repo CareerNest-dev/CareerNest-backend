@@ -35,7 +35,7 @@ export const fetchTimeSlotsByMentor = async (req, res) => {
     // if (role !== "student") {
     //     return res.status(401).json({ error: "Unauthorized" });
     // }
-    const result = await getMentoringTimeSlots(id);
+    const result = await getMentoringTimeSlotsByMentor(id);
     if (result.success) {
         return res.status(200).json({ timeSlots: result.timeSlots });
     } else {
