@@ -55,6 +55,39 @@ export const getUserCounts = async (req, res) => {
     });
   }
 };
+
+
+
+
+export const fetchGeneralCountMetrics = async (req, res) => {
+  try {
+    // Fetch counts for each user type in parallel
+    const [studentsCount, mentorsCount, recruitersCount] = await Promise.all([
+      getTableCount(TABLES.STUDENTS),
+      getTableCount(TABLES.MENTORS),
+      getTableCount(TABLES.RECRUITERS),
+    ]);
+
+   
+    const summary = {
+      totalUsers: studentsCount + mentorsCount + recruitersCount,
+      totalActiveJobPosts:0,
+      applications:0,
+      interviewsSheduled:0,
+      lastUpdated: new Date().toISOString(),
+    };
+    res.status(200).json({
+      success: true,
+      data: summary,
+    });
+  } catch (err) {
+    console.error("Error fetching dashboard genral summary:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch dashboard summary",
+    });
+  }
+};
 /**
  * Get all students with details
  * Supports pagination

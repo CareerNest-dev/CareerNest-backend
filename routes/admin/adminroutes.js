@@ -6,12 +6,14 @@ import {
   getStudents,
   getUserCounts,
   getUserStatistics,
-  searchUsers
+  searchUsers,
+  fetchGeneralCountMetrics
 } from "../../controller/admin_controller/admin_data.js";
 const adminRoutes = express.Router();
 
 adminRoutes.post("/defultlogin", adminLogin);
 adminRoutes.get("/getUserCount", getUserCounts);
+adminRoutes.get("/dashboard/count-metrics/general/fetch", fetchGeneralCountMetrics);
 adminRoutes.get("/getStudentData", getStudents);
 adminRoutes.get("/getRecruitersData", getRecruiters);
 adminRoutes.get("/getMentorsData", getMentors);

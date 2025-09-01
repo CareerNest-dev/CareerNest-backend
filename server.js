@@ -5,6 +5,9 @@ import adminRoutes from "./routes/admin/adminroutes.js";
 import authRouter from "./routes/authroutes.js";
 import mentorRouter from "./routes/mentor_routes.js";
 import updateRouter from "./routes/updateroute.js";
+import adminJobRoutes from "./routes/admin/job_routes.js";
+import adminMentorRoutes from "./routes/admin/mentor_routes.js";
+import adminUserRoutes from "./routes/admin/user_routes.js";
 dotenv.config();
 
 const app = express();
@@ -37,6 +40,9 @@ app.use("/api/mentor", mentorRouter);
 
 //admin routes
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin/jobs", adminJobRoutes);
+app.use("/api/admin/mentors", adminMentorRoutes);
+app.use("/api/admin/users", adminUserRoutes);
 //start server
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`server is running on port ${PORT}`);
