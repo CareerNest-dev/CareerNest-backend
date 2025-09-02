@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import { create, getMeetingByStudent ,getMeetingByMentor} from "../db/mentor_meeting.js";
+import { createMeeting, getMeetingByStudent ,getMeetingByMentor} from "../db/mentor_meeting.js";
 
 dotenv.config();
 
@@ -11,15 +11,11 @@ export const createMeeting = async (req, res) => {
     const { id, role } = req.user;
 
 
-    // if (role !== "mentor") {
-    //     return res.status(401).json({ error: "Unauthorized" });
-    // }
-
     if (!time_slot_id || !mentor_id) {
         return res.status(400).json({ succss: false, massage: "missing details" });
     }
 
-    const result = await create({ time_slot_id: time_slot_id, mentor_id: mentor_id, student_id: id ,date:date});
+    const result = await createMeeting({ time_slot_id: time_slot_id, mentor_id: mentor_id, student_id: id ,date:date});
     if (result.success) {
         return res.status(200).json({ message: "Meeting created successfully" });
     } else {

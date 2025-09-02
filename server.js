@@ -5,6 +5,7 @@ import adminRoutes from "./routes/admin/adminroutes.js";
 import authRouter from "./routes/authroutes.js";
 import mentorRouter from "./routes/mentor_routes.js";
 import updateRouter from "./routes/updateroute.js";
+import jobRouter from "./routes/job_routes.js";
 dotenv.config();
 
 const app = express();
@@ -34,7 +35,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/update", updateRouter);
 app.use("/api/mentor", mentorRouter);
-
+app.use("/api/job", jobRouter);
 //admin routes
 app.use("/api/admin", adminRoutes);
 //start server

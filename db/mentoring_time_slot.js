@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import dynamodb from "../config/aws/dynamo_db_config.js";
 dotenv.config();
 
-export const create = async (data) => {
+export const createTimeSlot = async (data) => {
   const params = {
     TableName: "mentoring_time_slots",
     Item: {
@@ -28,7 +28,7 @@ export const create = async (data) => {
 export const getMentoringTimeSlotsByMentor = async (mentor_id) => {
   const params = {
     TableName: "mentoring_time_slots",
-    IndexName: "id", // You'll need to create this GSI
+    IndexName: "mentor_id-index", // You'll need to create this GSI
     KeyConditionExpression: "mentor_id = :mentor_id",
     ExpressionAttributeValues: {
       ":mentor_id": mentor_id,
@@ -36,7 +36,7 @@ export const getMentoringTimeSlotsByMentor = async (mentor_id) => {
   };
   try {
     const result = await dynamodb.query(params).promise();
-    return result.Items.length > 0 ? result.Items[0] : null;
+    return result.Items.length > 0 ? result.Items : null;
   } catch (err) {
     console.error("Error getting data by mentor_id:", error);
     return null;

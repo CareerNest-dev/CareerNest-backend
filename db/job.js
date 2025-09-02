@@ -1,25 +1,28 @@
 import dotenv from "dotenv";
 import dynamodb from "../config/aws/dynamo_db_config.js";
 dotenv.config();
-
-export const create = async (data) => {
+//post new job by provider(initialy unverified)
+export const createJob = async (data) => {
   const params = {
-    TableName: "jobs",
+    TableName: "Jobs",
     Item: {
       id: `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      provider_id_id: data.provider_id_id,
+      provider_id: data.provider_id,
       job_title: data.job_title,
       experience_level: data.experience_level,
       location: data.location,
+      company:data.company,
       location_type: data.location_type,
       skills: data.skills,
       description: data.description,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      Active: true,
+      isValidate: false,
     },
   };
   try {
-    console.log(params);
+    //console.log(params);
     await dynamodb.put(params).promise();
     return { success: true };
   } catch (err) {
@@ -27,15 +30,21 @@ export const create = async (data) => {
     return { success: false, error: err.message };
   }
 };
-
-export const getJobs = async (mentor_id) => {
+//for providers(fetch all jobs releted to specific provider)
+export const getJobsByProviderId = async (provider_id) => {
   const params = {
-    TableName: "jobs",
-    IndexName: "id", // You'll need to create this GSI
+    TableName: "Jobs",
+    IndexName: "provider_id-index",
+    KeyConditionExpression: "provider_id = :provider_id",
+    FilterExpression: "isValidate = :isValidate OR id = :requesterId",
+    ExpressionAttributeValues: {
+      ":provider_id": provider_id,
+      isValidate: true,
+    },
   };
   try {
     const result = await dynamodb.query(params).promise();
-    return result.Items.length > 0 ? result.Items[0] : null;
+    return result.Items.length > 0 ? result.Items : null;
   } catch (err) {
     console.error("Error getting data by mentor_id:", error);
     return null;
@@ -44,7 +53,7 @@ export const getJobs = async (mentor_id) => {
 
 export const applyByStudent = async (data) => {
   const params = {
-    TableName: "student_jobs",
+    TableName: "studentJobs",
     Item: {
       id: `st_job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       job_id: data.job_id,

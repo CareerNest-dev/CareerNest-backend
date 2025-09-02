@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import { ACCOUNT_VERIFICATION_HTML_TEMPLATE } from "./account_verification_templete.js";
+import {
+  ACCOUNT_APPROVED_HTML_TEMPLATE,
+  ACCOUNT_DELETED_HTML_TEMPLATE,
+} from "./approved_reject_mail.js";
 import { WELCOME_EMAIL_TEMPLETE } from "./welcome_email..js";
 dotenv.config();
 
@@ -54,5 +58,39 @@ export const sendVerificationEmail = async (email, username) => {
     console.log(`Pending validation email sent to ${email}`);
   } catch (error) {
     console.error("Error sending Pending email:", error);
+  }
+};
+
+export const sendApprovedEmail = async (email) => {
+  try {
+    const mailReciver = {
+      from: process.env.APP_EMAIL,
+      to: email,
+      subject: "Account is Approved Succsussfuly",
+      html: ACCOUNT_APPROVED_HTML_TEMPLATE.replace("{{email}}", email),
+    };
+
+    // Replace with your email service implementation
+    await sendEmail.sendMail(mailReciver);
+    console.log(`approved validation email sent to ${email}`);
+  } catch (err) {
+    console.error("Error sending approved email:", error);
+  }
+};
+
+export const sendRejectEmail = async (email) => {
+  try {
+    const mailReciver = {
+      from: process.env.APP_EMAIL,
+      to: email,
+      subject: "Account Verification Failed",
+      html: ACCOUNT_DELETED_HTML_TEMPLATE.replace("{{email}}", email),
+    };
+
+    // Replace with your email service implementation
+    await sendEmail.sendMail(mailReciver);
+    console.log(`validation failed email sent to ${email}`);
+  } catch (err) {
+    console.error("Error sending failed email:", error);
   }
 };

@@ -21,7 +21,7 @@ export const update = async (req, res) => {
   if (skills && !Array.isArray(skills)) {
     return res.status(400).json({ error: "Skills must be an array" });
   }
-  let profileurl = null;
+  let profileUrl = null;
   if (file) {
     try {
       const fileExtension = file.mimetype.split("/")[1];
@@ -32,15 +32,15 @@ export const update = async (req, res) => {
       }
       const fileName = `profileimages/${id}_${Date.now()}.${fileExtension}`;
       const params = {
-        Bucket: process.env.S3_BUCKET_NAME || 'studentprofileimages',
+        Bucket: process.env.S3_BUCKET_NAME || "studentprofileimages",
         Key: fileName,
         Body: file.buffer,
         ContentType: file.mimetype,
-      //  ACL: "public-read", // Adjust based on access needs
+        //  ACL: "public-read", // Adjust based on access needs
       };
 
       await s3Client.send(new PutObjectCommand(params));
-      profileurl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+      profileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
       //https://studentprofileimages.s3.ap-south-1.amazonaws.com/profileimages/user_1752822494381_goovoomot_1752822768975.jpeg
     } catch (error) {
       console.log("Error uploading to S3:", error);
@@ -63,7 +63,7 @@ export const update = async (req, res) => {
       id,
       role,
       profileData,
-      profileurl
+      profileUrl
     );
     if (!updateResult.success) {
       return res.status(500).json({ error: updateResult.error });

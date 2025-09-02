@@ -93,7 +93,7 @@ export const register = async (req, res) => {
           expiresIn: codeExpireTime,
         }
       );
-      res.status(201).json({
+      return res.status(201).json({
         message: "user registered successfully",
         newToken,
         user: {
@@ -106,7 +106,7 @@ export const register = async (req, res) => {
       });
     } else {
       await sendVerificationEmail(email, username);
-      res.status(200).json({
+      return res.status(200).json({
         message:
           "Registration submitted successfully. Your account is pending admin validation. You will receive an email once approved.",
         user: {
@@ -159,7 +159,7 @@ export const login = async (req, res) => {
       { expiresIn: codeExpireTime }
     );
 
-    res.json({
+    return res.json({
       message: "Login successful",
       newToken,
       User: {
@@ -167,6 +167,12 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        address: user.address,
+        linkedin: user.linkedin,
+        mobileNumber: user.mobileNumber,
+        profileImageUrl: user.profileImageUrl,
+        skills: user.skills,
+        university: user.university,
         isValidate: user.isValidate,
         isValidate: user.isActive,
       },

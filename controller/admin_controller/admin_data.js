@@ -11,6 +11,7 @@ const TABLES = {
   STUDENTS: "Students",
   MENTORS: "Mentors",
   RECRUITERS: "Providers",
+  JOBS: "Jobs",
 };
 //Get user type from table name
 function getTypeFromTable(tableName) {
@@ -66,6 +67,7 @@ export const getStudents = async (req, res) => {
       TableName: TABLES.STUDENTS,
       Limit: parseInt(limit),
       AttributesToGet: [
+        "id",
         "username",
         "email",
         "address",
@@ -77,7 +79,7 @@ export const getStudents = async (req, res) => {
         "linkedin",
         "company",
         "profileImageUrl",
-
+        "isValidate",
         "isActive",
       ],
     };
@@ -90,9 +92,9 @@ export const getStudents = async (req, res) => {
     const result = await dynamodb.scan(params).promise();
 
     // Process profile pictures if they exist
-    //  const studentsWithSignedUrls = await processProfilePictures(result.Items);
+    // const studentsWithSignedUrls = await processProfilePictures(result.Items);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         students: result.Items,
@@ -121,6 +123,7 @@ export const getMentors = async (req, res) => {
       TableName: TABLES.MENTORS,
       Limit: parseInt(limit),
       AttributesToGet: [
+        "id",
         "username",
         "email",
         "address",
@@ -132,7 +135,7 @@ export const getMentors = async (req, res) => {
         "linkedin",
         "company",
         "profileImageUrl",
-
+        "isValidate",
         "isActive",
       ],
     };
@@ -148,7 +151,7 @@ export const getMentors = async (req, res) => {
     // Process profile pictures if they exist
     // const mentorsWithSignedUrls = await processProfilePictures(result.Items);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         mentors: result.Items,
@@ -177,6 +180,7 @@ export const getRecruiters = async (req, res) => {
       TableName: TABLES.RECRUITERS,
       Limit: parseInt(limit),
       AttributesToGet: [
+        "id",
         "username",
         "email",
         "address",
@@ -188,7 +192,7 @@ export const getRecruiters = async (req, res) => {
         "linkedin",
         "company",
         "profileImageUrl",
-
+        "isValidate",
         "isActive",
       ],
     };
@@ -204,7 +208,7 @@ export const getRecruiters = async (req, res) => {
     // Process profile pictures if they exist
     // const recruitersWithSignedUrls = await processProfilePictures(result.Items);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         recruiters: result.Items,
@@ -264,7 +268,7 @@ export const getUserStatistics = async (req, res) => {
       },
     };
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: statistics,
     });
@@ -307,7 +311,7 @@ export const searchUsers = async (req, res) => {
       );
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         results,
@@ -319,6 +323,58 @@ export const searchUsers = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to search users",
+    });
+  }
+};
+//get all jobs for admin
+export const getAllJObData = async (req, res) => {
+  try {
+    const { limit = 20, lastEvaluatedKey } = req.query;
+    const params = {
+      TableName: TABLES.JOBS,
+      Limit: parseInt(limit),
+      AttributesToGet: [
+        "id",
+        "provider_id",
+        "job_title",
+        "experience_level",
+        "location",
+        "company",
+        "location_type",
+        "skills",
+        "description",
+        "updatedAt",
+        "isValidate",
+        "isActive",
+      ],
+    };
+
+    if (lastEvaluatedKey) {
+      params.ExclusiveStartKey = JSON.parse(
+        decodeURIComponent(lastEvaluatedKey)
+      );
+    }
+    const result = await dynamodb.scan(params).promise();
+
+    // Process profile pictures if they exist
+    //  const studentsWithSignedUrls = await processProfilePictures(result.Items);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        students: result.Items,
+        count: result.Count,
+        scannedCount: result.ScannedCount,
+        lastEvaluatedKey: result.LastEvaluatedKey
+          ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey))
+          : null,
+      },
+    });
+  } catch (err) {
+    console.error("Error getting jobs", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get jobs",
     });
   }
 };
