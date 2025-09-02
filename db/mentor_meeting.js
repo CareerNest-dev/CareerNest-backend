@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import dynamodb from "../config/aws/dynamo_db_config.js";
 dotenv.config();
 
+//create meeting by student
 export const createMeeting = async (data) => {
   const params = {
     TableName: "mentoring_meetings",
@@ -15,10 +16,9 @@ export const createMeeting = async (data) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
-    
   };
   try {
-    console.log(params);
+    //console.log(params);
     await dynamodb.put(params).promise();
     return { success: true };
   } catch (err) {
@@ -26,7 +26,7 @@ export const createMeeting = async (data) => {
     return { success: false, error: err.message };
   }
 };
-
+//get created meeting
 export const getMeetingByStudent = async (student_id) => {
   const params = {
     TableName: "mentoring_meetings",
@@ -38,13 +38,14 @@ export const getMeetingByStudent = async (student_id) => {
   };
   try {
     const result = await dynamodb.query(params).promise();
-    return result.Items.length > 0 ? result.Items : null;
+    const sheduledMeetings = result.Items.length > 0 ? result.Items : null;
+    return { success: true, meetings: sheduledMeetings };
   } catch (err) {
     console.error("Error getting data by student_id:", error);
     return null;
   }
 };
-
+//get created meeting by mentor
 export const getMeetingByMentor = async (mentor_id) => {
   const params = {
     TableName: "mentoring_meetings",
@@ -56,7 +57,8 @@ export const getMeetingByMentor = async (mentor_id) => {
   };
   try {
     const result = await dynamodb.query(params).promise();
-    return result.Items.length > 0 ? result.Items : null;
+    const sheduledMeetings = result.Items.length > 0 ? result.Items : null;
+    return { success: true, meetings: sheduledMeetings };
   } catch (err) {
     console.error("Error getting data by mentor_id:", error);
     return null;

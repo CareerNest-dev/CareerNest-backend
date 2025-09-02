@@ -5,11 +5,11 @@ import {
   fetchJobs,
 } from "../controller/job_controller.js";
 //import { login, register } from "../controller/student_authentication.js";
-
+import jwtAuth from "../middleware/auth.js";
 const jobRouter = express.Router();
 
-jobRouter.post("/createJobs", createJobByProvider);
-jobRouter.get("/fetchJobs", fetchJobs);
-jobRouter.get("/applyJobs", applyJobByStudent);
+jobRouter.post("/createJobs",jwtAuth, createJobByProvider);
+jobRouter.get("/fetchJobs",jwtAuth, fetchJobs);
+jobRouter.get("/applyJobs",jwtAuth, applyJobByStudent);
 
 export default jobRouter;

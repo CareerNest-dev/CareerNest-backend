@@ -36,7 +36,8 @@ export const getMentoringTimeSlotsByMentor = async (mentor_id) => {
   };
   try {
     const result = await dynamodb.query(params).promise();
-    return result.Items.length > 0 ? result.Items : null;
+    const items = result.Items.length > 0 ? result.Items : null;
+    return { success: true, timeSlots: items };
   } catch (err) {
     console.error("Error getting data by mentor_id:", error);
     return null;

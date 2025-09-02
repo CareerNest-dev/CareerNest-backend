@@ -1,6 +1,7 @@
 import express from "express";
 import { adminLogin } from "../../controller/admin_controller/admin_auth.js";
 import {
+  getAllJObData,
   getMentors,
   getRecruiters,
   getStudents,
@@ -28,5 +29,6 @@ adminRoutes.put("/approvedUser", approvedUsers);
 adminRoutes.delete("/rejectUser", rejectUsers);
 adminRoutes.put("/approvedJob", approvedJob);
 adminRoutes.delete("/rejectJob", rejectJob);
+adminRoutes.get("/getAllJobs", getAllJObData);
 
 export default adminRoutes;

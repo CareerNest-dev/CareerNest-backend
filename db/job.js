@@ -11,7 +11,7 @@ export const createJob = async (data) => {
       job_title: data.job_title,
       experience_level: data.experience_level,
       location: data.location,
-      company:data.company,
+      company: data.company,
       location_type: data.location_type,
       skills: data.skills,
       description: data.description,
@@ -36,7 +36,7 @@ export const getJobsByProviderId = async (provider_id) => {
     TableName: "Jobs",
     IndexName: "provider_id-index",
     KeyConditionExpression: "provider_id = :provider_id",
-    FilterExpression: "isValidate = :isValidate OR id = :requesterId",
+    FilterExpression: "isValidate = :isValidate",
     ExpressionAttributeValues: {
       ":provider_id": provider_id,
       isValidate: true,
@@ -44,10 +44,11 @@ export const getJobsByProviderId = async (provider_id) => {
   };
   try {
     const result = await dynamodb.query(params).promise();
-    return result.Items.length > 0 ? result.Items : null;
+    const jobs = result.Items.length > 0 ? result.Items : null;
+    return { success: true, jobs: jobs };
   } catch (err) {
     console.error("Error getting data by mentor_id:", error);
-    return null;
+    return { success: false };
   }
 };
 

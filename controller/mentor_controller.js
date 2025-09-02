@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import {
   createTimeSlot,
-  getMentoringTimeSlotsByMentor
+  getMentoringTimeSlotsByMentor,
 } from "../db/mentoring_time_slot.js";
 
 dotenv.config();
@@ -32,10 +32,16 @@ export const fetchTimeSlotsByMentor = async (req, res) => {
   // if (role !== "student") {
   //     return res.status(401).json({ error: "Unauthorized" });
   // }
-  const result = await getMentoringTimeSlotsByMentor(id);
-  if (result.success) {
-    return res.status(200).json({ timeSlots: result.timeSlots });
-  } else {
-    return res.status(400).json({ error: result.error });
+  try {
+    const result = await getMentoringTimeSlotsByMentor(id);
+    if (result.success) {
+      return res.status(200).json({ timeSlots: result.timeSlots });
+    } else {
+      console.error("Error getting time slots in table");
+      return res.status(400).json({ error: result.error });
+    }
+  } catch (err) {
+    console.error("Error getting time slots:", err);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

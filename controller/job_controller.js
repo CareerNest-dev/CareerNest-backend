@@ -59,7 +59,7 @@ export const fetchJobs = async (req, res) => {
   try {
     const result = await getJobsByProviderId(id);
     if (result.success) {
-      return res.status(200).json({ success: true, data: result });
+      return res.status(200).json({ success: true, jobs: result.jobs });
     } else {
       return res.status(400).json({ success: false, error: result.error });
     }
@@ -88,5 +88,3 @@ export const applyJobByStudent = async (req, res) => {
     return res.status(400).json({ error: result.error });
   }
 };
-
-
