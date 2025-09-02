@@ -225,6 +225,8 @@ export const getRecruiters = async (req, res) => {
   }
 };
 
+
+
 /**
  * Get detailed user statistics
  * Returns more comprehensive analytics
@@ -281,8 +283,8 @@ export const getUserStatistics = async (req, res) => {
   }
 };
 
-// Search users across all categories
 
+// Search users across all categories
 export const searchUsers = async (req, res) => {
   try {
     const { query, category, limit = 10 } = req.query;
@@ -326,6 +328,9 @@ export const searchUsers = async (req, res) => {
     });
   }
 };
+
+
+
 //get all jobs for admin
 export const getAllJObData = async (req, res) => {
   try {

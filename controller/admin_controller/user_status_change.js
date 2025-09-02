@@ -2,6 +2,8 @@ import {
   deleteUsers,
   verifidUserState,
 } from "../../helper/admin_helper/chage_user_status.js";
+import dynamodb from "../../config/aws/dynamo_db_config.js";
+
 //approved mentor/provider
 export const approvedUsers = async (req, res) => {
   const { email, role, isValidate } = req.body;
@@ -17,6 +19,7 @@ export const approvedUsers = async (req, res) => {
     await sendApprovedEmail(email, result.updatedAttributes.username);
     res.status(200).json({
       message: "Profile Approved successfully",
+      success:true,
       updatedAttributes: result.updatedAttributes,
     });
   } catch (err) {
@@ -38,6 +41,7 @@ export const rejectUsers = async (req, res) => {
     await sendRejectEmail(email, result.updatedAttributes.username);
     res.status(200).json({
       message: "Profile Deleted successfully",
+       success:true,
       updatedAttributes: result.updatedAttributes,
     });
   } catch (err) {

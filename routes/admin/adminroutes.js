@@ -28,7 +28,7 @@ adminRoutes.get("/searchUsers", searchUsers);
 adminRoutes.put("/approvedUser", approvedUsers);
 adminRoutes.delete("/rejectUser", rejectUsers);
 adminRoutes.put("/approvedJob", approvedJob);
-adminRoutes.delete("/rejectJob", rejectJob);
+adminRoutes.put("/rejectJob", rejectJob);
 adminRoutes.get("/getAllJobs", getAllJObData);
 
 export default adminRoutes;
