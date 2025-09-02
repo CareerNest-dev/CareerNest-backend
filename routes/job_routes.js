@@ -8,8 +8,8 @@ import {
 import jwtAuth from "../middleware/auth.js";
 const jobRouter = express.Router();
 
-jobRouter.post("/createJobs",jwtAuth, createJobByProvider);
-jobRouter.get("/fetchJobs",jwtAuth, fetchJobs);
-jobRouter.get("/applyJobs",jwtAuth, applyJobByStudent);
+jobRouter.post("/createJobs", jwtAuth, createJobByProvider); //checked
+jobRouter.get("/fetchJobs", jwtAuth, fetchJobs); //checked
+jobRouter.post("/applyJobs", jwtAuth, applyJobByStudent); //checked
 
 export default jobRouter;

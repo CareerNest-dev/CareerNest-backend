@@ -83,7 +83,7 @@ export const applyJobByStudent = async (req, res) => {
 
   const result = await applyByStudent({ job_id, student_id: id });
   if (result.success) {
-    return res.status(200).json({ message: "Time slot created successfully" });
+    return res.status(200).json({ message: "apply the job successfully" });
   } else {
     return res.status(400).json({ error: result.error });
   }

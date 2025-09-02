@@ -31,15 +31,15 @@ export const createJob = async (data) => {
   }
 };
 //for providers(fetch all jobs releted to specific provider)
-export const getJobsByProviderId = async (provider_id) => {
+export const getJobsByProviderId = async (provider_id, requesterId = null) => {
   const params = {
     TableName: "Jobs",
     IndexName: "provider_id-index",
     KeyConditionExpression: "provider_id = :provider_id",
-    FilterExpression: "isValidate = :isValidate",
+    //  FilterExpression: "isValidate = :isValidate OR id = :requesterId",
     ExpressionAttributeValues: {
       ":provider_id": provider_id,
-      isValidate: true,
+      //isValidate: true,
     },
   };
   try {
@@ -64,7 +64,7 @@ export const applyByStudent = async (data) => {
     },
   };
   try {
-    console.log(params);
+  //  console.log(params);
     await dynamodb.put(params).promise();
     return { success: true };
   } catch (err) {
